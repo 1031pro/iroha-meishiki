@@ -1,0 +1,231 @@
+:root {
+  color-scheme: light;
+  --pink: #ed347a;
+  --pink-deep: #c81e61;
+  --pink-soft: #fff0f4;
+  --ivory: #fffaf6;
+  --purple: #51194f;
+  --gold: #d9a34b;
+  --line: #e9cfc9;
+  --ink: #55151a;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { min-height: 100vh; margin: 0; color: var(--purple); background: var(--pink-soft); }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+
+.app-shell { min-height: 100vh; }
+
+/* 入力画面 */
+.input-screen {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(390px, 430px);
+  gap: 56px;
+  align-items: center;
+  width: min(1040px, calc(100% - 48px));
+  min-height: min(720px, calc(100vh - 72px));
+  margin: 36px auto;
+  padding: 48px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 210, 225, 0.48), transparent 26%),
+    linear-gradient(rgba(255, 250, 246, 0.96), rgba(255, 244, 246, 0.96));
+  border: 1px solid rgba(237, 52, 122, 0.34);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(142, 31, 81, 0.14);
+}
+
+.input-screen::before,
+.input-screen::after {
+  position: absolute;
+  width: 72px;
+  height: 78px;
+  background: url("./assets/meishiki-sheet-ornament.png") center / contain no-repeat;
+  opacity: 0.82;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 46%, transparent 82%);
+  mask-image: radial-gradient(ellipse at center, #000 46%, transparent 82%);
+  content: "";
+}
+.input-screen::before { top: 18px; left: 22px; }
+.input-screen::after { right: 24px; bottom: 18px; transform: rotate(180deg); }
+
+.brand-copy { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; }
+.brand-copy::after { width: 260px; height: 1px; margin-top: 22px; background: linear-gradient(90deg, transparent, rgba(217, 163, 75, 0.78), transparent); content: ""; }
+.brand-ribbon {
+  min-width: 184px;
+  margin: 0 0 14px;
+  padding: 7px 28px;
+  color: #fff;
+  font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  background: linear-gradient(135deg, var(--pink-deep), var(--pink));
+  clip-path: polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
+}
+.brand-copy h1 { margin: 0; color: var(--purple); font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(1.9rem, 3vw, 2.5rem); letter-spacing: 0.08em; }
+.brand-copy > p:last-child { margin: 10px 0 0; color: #744263; font-size: 0.92rem; font-weight: 700; line-height: 1.8; }
+
+.birth-form { position: relative; z-index: 1; display: grid; gap: 18px; padding: 18px; background: rgba(255, 253, 251, 0.92); border: 1px solid rgba(237, 52, 122, 0.4); border-radius: 8px; box-shadow: 0 14px 36px rgba(142, 31, 81, 0.11); }
+fieldset { margin: 0; padding: 0; border: 0; }
+legend, label > span { display: block; margin-bottom: 7px; color: var(--purple); font-size: 0.82rem; font-weight: 800; }
+.date-grid, .time-grid { display: grid; gap: 10px; }
+.date-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+.time-grid { grid-template-columns: 1fr 1fr; }
+.unknown-row { display: flex; grid-column: 1 / -1; gap: 8px; align-items: center; }
+.unknown-row span { margin: 0; color: #744263; }
+input[type="checkbox"] { accent-color: var(--pink); }
+select, input[type="number"] { width: 100%; min-height: 42px; padding: 8px 10px; color: #3f3135; background: #fffdfb; border: 1px solid rgba(222, 101, 147, 0.5); border-radius: 6px; }
+select:disabled { color: #8d8587; background: #f6f2f2; }
+select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 52, 122, 0.24); outline-offset: 2px; }
+.sex-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #fff1f5; border: 1px solid rgba(237, 52, 122, 0.32); border-radius: 8px; }
+.sex-switch label { position: relative; }
+.sex-switch input { position: absolute; opacity: 0; }
+.sex-switch span { margin: 0; padding: 10px; color: #744263; text-align: center; border-radius: 6px; }
+.sex-switch input:checked + span { color: #fff; background: linear-gradient(135deg, #f2558b, #e72c71); }
+.base-year span { margin-bottom: 7px; }
+.form-error { margin: -4px 0; padding: 8px 10px; color: #a3124c; background: #fff0f4; border-left: 3px solid var(--pink); }
+#submit-button { min-height: 46px; color: #fff; font-weight: 900; background: linear-gradient(135deg, #f2558b, var(--pink) 52%, var(--pink-deep)); border: 1px solid rgba(160, 20, 80, 0.24); border-radius: 6px; box-shadow: 0 8px 20px rgba(200, 30, 97, 0.2); }
+
+/* 結果画面共通 */
+.results-screen { min-height: 100vh; color: var(--ink); background: #fdf8f1; }
+.screen-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  height: 68px;
+  padding: 10px 16px;
+  background: rgba(253, 248, 241, 0.98);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(82, 27, 30, 0.06);
+}
+.screen-header strong { grid-column: 2; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: clamp(1.05rem, 1.4vw, 1.4rem); letter-spacing: 0.08em; text-align: center; }
+.screen-header button { grid-column: 3; justify-self: end; min-height: 40px; padding: 8px 14px; color: var(--ink); background: #fdf8f1; border: 1px solid var(--line); border-radius: 4px; }
+.screen-tabs { position: fixed; top: 68px; right: 0; left: 0; z-index: 9; display: grid; grid-template-columns: repeat(4, 1fr); height: 48px; background: #fff; border-bottom: 1px solid var(--line); }
+.screen-tabs button { color: var(--ink); font-weight: 800; background: #fff; border: 0; border-right: 1px solid var(--line); }
+.screen-tabs button:first-child { color: #fff; background: var(--pink); }
+
+/* 最初の一画面に収める命式シート */
+.sheet-viewport { position: relative; width: 100%; height: calc(100vh - 116px); min-height: 320px; margin-top: 116px; overflow: hidden; background: #fdf8f1; }
+.meishiki-sheet {
+  --sheet-scale: 1;
+  position: absolute;
+  width: 1120px;
+  height: 563px;
+  padding: 2px;
+  overflow: hidden;
+  color: #501014;
+  background: #fffaf5;
+  border: 1px solid #ead0ca;
+  transform: scale(var(--sheet-scale));
+  transform-origin: top left;
+}
+.sheet-heading { display: grid; grid-template-columns: 1.78fr 1fr; height: 85px; border: 1px solid #ead0ca; }
+.sheet-title { position: relative; display: flex; align-items: center; justify-content: center; padding: 5px 16px; text-align: center; }
+.sheet-title > div { transform: translateY(-8px); }
+.sheet-title img { position: absolute; left: 5px; width: 62px; height: 55px; object-fit: contain; mix-blend-mode: multiply; }
+.sheet-title h1 { margin: 0; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: 2.8rem; font-weight: 900; letter-spacing: 0.04em; -webkit-text-stroke: 0.8px currentColor; }
+.sheet-title p { margin: 0; font-size: 1.15rem; font-weight: 900; -webkit-text-stroke: 0.25px currentColor; }
+.sheet-heading dl { display: grid; align-content: center; gap: 6px; margin: 0; padding: 8px 16px; border-left: 1px solid #ead0ca; font-size: 1.15rem; font-weight: 800; }
+.sheet-heading dl div { display: grid; grid-template-columns: 150px 1fr; }
+.sheet-heading dt, .sheet-heading dd { margin: 0; }
+.sheet-table { width: 100%; height: 338px; table-layout: fixed; border-collapse: collapse; }
+.sheet-table th, .sheet-table td { border: 1px solid #ead0ca; text-align: center; }
+.sheet-table thead th { height: 68px; color: #fff; font-size: 1.51rem; }
+.sheet-table thead th:first-child { width: 181px; color: #501014; background: #fffaf5; }
+.sheet-table thead small { display: block; margin-top: 2px; font-size: 0.84rem; }
+.pillar-year { background: #fc4779; }
+.pillar-month { background: #449f6a; }
+.pillar-day { background: #faa502; }
+.pillar-hour { background: #5788c6; }
+.sheet-table tbody th { width: 181px; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: 1.5rem; font-weight: 900; letter-spacing: -0.06em; background: #fffaf5; -webkit-text-stroke: 0.2px currentColor; }
+.sheet-table tbody th small { display: block; margin-top: 5px; font-size: 1.02rem; font-weight: 900; line-height: 1.3; letter-spacing: -0.03em; }
+.sheet-table td { height: 90px; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: 2.6rem; font-weight: 900; background: rgba(255,255,255,0.25); }
+.sheet-table td ruby { ruby-position: over; }
+.sheet-table td rt { color: #76520e; font-family: "Noto Sans JP", sans-serif; font-size: 0.38em; }
+.sheet-table td .kanshi-reading { display: block; color: #76520e; font-family: "Noto Sans JP", sans-serif; font-size: 0.62rem; }
+.sheet-table td strong { display: block; font-size: 2.15rem; }
+.sheet-empty { color: #a98d88; }
+.sheet-reference-grid { display: grid; grid-template-columns: 1fr 1.06fr; gap: 10px; height: 136px; padding-top: 8px; }
+.sheet-reference-grid section { border: 2px dotted; }
+.stem-reference { color: #fc4779; }
+.branch-reference { color: #299e68; }
+.sheet-reference-grid h2 { margin: 0; padding: 2px; font-size: 1.4rem; text-align: center; }
+.sheet-reference-grid section > div { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 4px; padding: 10px; color: #501014; }
+.branch-reference > div { grid-template-columns: repeat(6, 1fr) !important; }
+.sheet-reference-grid span { font-size: 0.95rem; font-weight: 900; white-space: nowrap; }
+
+/* 2ページ目以降 */
+.detail-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; padding: 56px 24px 100px; }
+.detail-card { min-width: 0; scroll-margin-top: 132px; padding: 28px; background: #fffaf5; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(82, 27, 30, 0.06); }
+.section-heading { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.section-heading p { margin: 0 0 4px; color: var(--pink); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.16em; }
+.section-heading h2 { margin: 0; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: 1.65rem; }
+.pillar-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.pillar-cards article { overflow: hidden; border: 1px solid var(--line); }
+.pillar-cards h3 { margin: 0; padding: 10px; color: #fff; text-align: center; }
+.large-kanshi { margin: 0; padding: 20px 8px; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: 2.5rem; font-weight: 900; text-align: center; }
+.large-kanshi rt { color: #76520e; font-size: 0.35em; }
+.pillar-cards dl { margin: 0; }
+.pillar-cards dl div { display: grid; grid-template-columns: 1fr 1fr; padding: 8px 10px; border-top: 1px solid var(--line); }
+.pillar-cards dt { font-weight: 800; }
+.pillar-cards dd { margin: 0; text-align: right; }
+.empty-pillar { display: grid; min-height: 174px; margin: 0; color: #967b7e; place-items: center; }
+.chart-note { margin: 18px 0 0; color: #76565a; }
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.luck-card table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 1rem; }
+.luck-card th, .luck-card td { padding: 12px 10px; border: 1px solid var(--line); text-align: center; }
+.luck-card th { color: #fff; background: var(--pink); }
+.annual-luck-block th { background: #449f6a; }
+.interpretation-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.interpretation-list article { padding: 18px; background: #fff; border-left: 4px solid var(--pink); }
+.interpretation-list h3 { margin: 0 0 8px; font-family: "Noto Serif JP", "Yu Mincho", serif; }
+.interpretation-list p { margin: 0; line-height: 1.85; }
+
+@media (max-width: 900px) {
+  .input-screen { display: block; width: 100%; min-height: 100vh; margin: 0; padding: 28px 16px; border: 0; border-radius: 0; box-shadow: none; }
+  .input-screen::after { display: none; }
+  .brand-copy { margin: 32px 0 20px; }
+  .brand-copy::after { width: 220px; margin-top: 14px; }
+  .birth-form { width: min(100%, 520px); margin: 0 auto; }
+  .screen-header { height: 60px; padding: 8px; }
+  .screen-header strong { font-size: 0.96rem; }
+  .screen-header button { min-height: 36px; padding: 6px 9px; font-size: 0.78rem; }
+  .screen-tabs { top: 60px; height: 44px; }
+  .sheet-viewport { height: calc(100vh - 104px); margin-top: 104px; }
+  .detail-results { padding: 40px 12px 84px; }
+  .detail-card { padding: 18px 12px; }
+  .pillar-cards { grid-template-columns: repeat(2, 1fr); }
+  .interpretation-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .brand-ribbon { padding-block: 5px; font-size: 0.8rem; }
+  .brand-copy h1 { font-size: 1.6rem; }
+  .brand-copy > p:last-child { font-size: 0.78rem; }
+  .birth-form { gap: 12px; padding: 14px; }
+  legend, label > span { font-size: 0.75rem; }
+  select, input[type="number"] { min-height: 38px; padding: 6px 8px; }
+  .sex-switch span { padding: 8px; }
+  .screen-header strong { max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .screen-tabs button { font-size: 0.78rem; }
+  .pillar-cards { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .screen-header, .screen-tabs { display: none; }
+  .sheet-viewport { height: auto; margin: 0; overflow: visible; }
+  .meishiki-sheet { position: static; transform: none; }
+}

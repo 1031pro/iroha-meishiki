@@ -1,0 +1,11 @@
+{
+  "name": "かんたん命式シート",
+  "short_name": "命式シート",
+  "description": "四柱推命の命式・大運・年運を表示するツール",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff4f6",
+  "theme_color": "#ed347a",
+  "orientation": "any"
+}

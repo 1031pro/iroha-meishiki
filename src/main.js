@@ -1,4 +1,5 @@
-import { calculateAnnualLuck, calculateChart, calculateMajorLuck, createInterpretation } from "./four-pillars.js";
+import { calculateAnnualLuck, calculateChart, calculateMajorLuck } from "./four-pillars.js";
+import { createOfflineReading } from "./interpretation-engine.js";
 import { fitSheet, renderResult } from "./view.js";
 
 const form = document.querySelector("#birth-form");
@@ -62,12 +63,29 @@ function showResult(input) {
   const chart = calculateChart(input);
   const majorLuck = calculateMajorLuck(chart);
   const annualLuck = calculateAnnualLuck(chart, input.currentYear);
-  const interpretation = createInterpretation(chart, majorLuck, annualLuck);
-  renderResult(results, { chart, majorLuck, annualLuck, interpretation });
+  const reading = createOfflineReading(chart, majorLuck, annualLuck);
+  renderResult(results, { chart, majorLuck, annualLuck, reading });
   inputScreen.hidden = true;
   results.hidden = false;
   document.body.classList.add("result-mode");
+  showResultPage("chart");
   requestAnimationFrame(() => requestAnimationFrame(fitSheet));
+}
+
+function showResultPage(pageName) {
+  results.querySelectorAll("[data-page-panel]").forEach((panel) => {
+    const active = panel.dataset.pagePanel === pageName;
+    panel.hidden = !active;
+    panel.classList.toggle("is-active", active);
+  });
+  results.querySelectorAll(".screen-tabs [data-page]").forEach((button) => {
+    const active = button.dataset.page === pageName;
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+  document.body.dataset.resultPage = pageName;
+  window.scrollTo({ top: 0, behavior: "instant" });
+  if (pageName === "chart") requestAnimationFrame(() => requestAnimationFrame(fitSheet));
 }
 
 form.addEventListener("submit", (event) => {
@@ -87,9 +105,9 @@ unknownTime.addEventListener("change", setTimeDisabled);
 
 results.addEventListener("click", (event) => {
   if (event.target.closest("[data-edit-input]")) return showInput();
-  const button = event.target.closest("[data-target]");
+  const button = event.target.closest("[data-page]");
   if (!button) return;
-  document.querySelector(`#${button.dataset.target}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  showResultPage(button.dataset.page);
 });
 
 window.addEventListener("resize", () => {

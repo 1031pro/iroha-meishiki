@@ -61,24 +61,49 @@ function renderPillarCards(chart) {
 
 function renderLuckTable(title, subtitle, rows, type) {
   const body = rows.map((row) => `<tr><td>${type === "major" ? `${row.ageStart}〜${row.ageEnd}歳` : `${row.year}年`}</td><td>${escapeHtml(row.pillar.label)}</td><td>${escapeHtml(row.pillar.tenGod)}</td><td>${escapeHtml(row.pillar.twelveStage)}</td></tr>`).join("");
-  return `<section id="${type === "major" ? "major-luck-section" : "annual-luck-section"}" class="detail-card luck-card ${type}-luck-block"><div class="section-heading"><p>${escapeHtml(subtitle)}</p><h2>${escapeHtml(title)}</h2></div><div class="table-scroll"><table><thead><tr><th>${type === "major" ? "年齢" : "年"}</th><th>干支</th><th>通変星</th><th>十二運</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  return `<section class="detail-card luck-card ${type}-luck-block"><div class="section-heading"><p>${escapeHtml(subtitle)}</p><h2>${escapeHtml(title)}</h2></div><div class="table-scroll"><table><thead><tr><th>${type === "major" ? "年齢" : "年"}</th><th>干支</th><th>通変星</th><th>十二運</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
-function renderInterpretation(items) {
-  return `<section id="interpretation-section" class="detail-card interpretation-block"><div class="section-heading"><p>読み方</p><h2>命式の要点</h2></div><div class="interpretation-list">${items.map((item) => `<article><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.body)}</p></article>`).join("")}</div></section>`;
+function renderReadingPage(reading) {
+  const sections = reading.sections.map((section) => `
+    <section class="reading-field reading-field-${escapeHtml(section.id)}">
+      <h2>${escapeHtml(section.title)}${section.note ? `<small>（${escapeHtml(section.note)}）</small>` : ""}</h2>
+      <div class="reading-copy">${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>
+    </section>`).join("");
+  return `
+    <div class="reading-viewport">
+      <article class="reading-sheet" aria-label="四柱推命リーディング">
+        <header class="reading-heading"><span>2</span><h1>四柱推命リーディング</h1></header>
+        <img class="reading-flower reading-flower-top" src="./assets/meishiki-sheet-ornament.png" alt="" />
+        ${sections}
+        <img class="reading-flower reading-flower-bottom" src="./assets/meishiki-sheet-ornament.png" alt="" />
+      </article>
+    </div>`;
 }
 
 export function renderResult(target, result) {
   target.innerHTML = `
-    <header id="chart-section" class="screen-header"><strong>四柱推命 鑑定ツール</strong><button type="button" data-edit-input>日付を変更</button></header>
-    <nav class="screen-tabs" aria-label="表示切り替え"><button type="button" data-target="chart-section">命式</button><button type="button" data-target="major-luck-section">大運</button><button type="button" data-target="annual-luck-section">年運</button><button type="button" data-target="interpretation-section">鑑定文</button></nav>
-    ${renderMeishikiSheet(result.chart)}
-    <div class="detail-results">
-      ${renderPillarCards(result.chart)}
-      ${renderLuckTable("大運", "10年ごとの流れ", result.majorLuck, "major")}
-      ${renderLuckTable("年運", `${result.annualLuck[0].year}年からの流れ`, result.annualLuck, "annual")}
-      ${renderInterpretation(result.interpretation)}
-    </div>`;
+    <header class="screen-header"><strong>四柱推命 鑑定ツール</strong><button type="button" data-edit-input>日付を変更</button></header>
+    <nav class="screen-tabs" aria-label="ページ切り替え">
+      <button type="button" data-page="chart" aria-current="page"><span>1</span> 命式シート</button>
+      <button type="button" data-page="reading"><span>2</span> 鑑定結果</button>
+    </nav>
+    <section class="result-page is-active" data-page-panel="chart">
+      ${renderMeishikiSheet(result.chart)}
+      <button class="page-turn page-turn-next" type="button" data-page="reading">鑑定結果を見る <span>›</span></button>
+    </section>
+    <section class="result-page" data-page-panel="reading" hidden>
+      ${renderReadingPage(result.reading)}
+      <button class="page-turn page-turn-back" type="button" data-page="chart"><span>‹</span> 命式シートへ戻る</button>
+      <details class="calculation-details">
+        <summary>命式・大運・年運の詳しい内容を見る</summary>
+        <div class="detail-results">
+          ${renderPillarCards(result.chart)}
+          ${renderLuckTable("大運", "10年ごとの流れ", result.majorLuck, "major")}
+          ${renderLuckTable("年運", `${result.annualLuck[0].year}年からの流れ`, result.annualLuck, "annual")}
+        </div>
+      </details>
+    </section>`;
 }
 
 export function fitSheet() {

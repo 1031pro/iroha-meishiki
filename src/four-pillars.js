@@ -7,16 +7,21 @@ const STEM_ROWS = [
 ];
 
 const BRANCH_ROWS = [
-  ["子", "ね"], ["丑", "うし"], ["寅", "とら"], ["卯", "う"],
-  ["辰", "たつ"], ["巳", "み"], ["午", "うま"], ["未", "ひつじ"],
-  ["申", "さる"], ["酉", "とり"], ["戌", "いぬ"], ["亥", "い"],
+  ["子", "ね", "水", "陽"], ["丑", "うし", "土", "陰"], ["寅", "とら", "木", "陽"], ["卯", "う", "木", "陰"],
+  ["辰", "たつ", "土", "陽"], ["巳", "み", "火", "陰"], ["午", "うま", "火", "陽"], ["未", "ひつじ", "土", "陰"],
+  ["申", "さる", "金", "陽"], ["酉", "とり", "金", "陰"], ["戌", "いぬ", "土", "陽"], ["亥", "い", "水", "陰"],
 ];
 
 export const STEMS = STEM_ROWS.map(([char, reading, element, polarity], index) => ({ char, reading, element, polarity, index }));
-export const BRANCHES = BRANCH_ROWS.map(([char, reading], index) => ({ char, reading, index }));
+export const BRANCHES = BRANCH_ROWS.map(([char, reading, element, polarity], index) => ({ char, reading, element, polarity, index }));
 
-const ELEMENT_INDEX = { 木: 0, 火: 1, 土: 2, 金: 3, 水: 4 };
+export const ELEMENT_INDEX = { 木: 0, 火: 1, 土: 2, 金: 3, 水: 4 };
 const MAIN_HIDDEN = { 子: "癸", 丑: "己", 寅: "甲", 卯: "乙", 辰: "戊", 巳: "丙", 午: "丁", 未: "己", 申: "庚", 酉: "辛", 戌: "戊", 亥: "壬" };
+const HIDDEN_STEMS = {
+  子: ["癸"], 丑: ["己", "癸", "辛"], 寅: ["甲", "丙", "戊"], 卯: ["乙"],
+  辰: ["戊", "乙", "癸"], 巳: ["丙", "戊", "庚"], 午: ["丁", "己"], 未: ["己", "丁", "乙"],
+  申: ["庚", "壬", "戊"], 酉: ["辛"], 戌: ["戊", "辛", "丁"], 亥: ["壬", "甲"],
+};
 const STAGE_NAMES = ["長生", "沐浴", "冠帯", "建禄", "帝旺", "衰", "病", "死", "墓", "絶", "胎", "養"];
 const STAGE_START = [11, 6, 2, 9, 2, 9, 5, 0, 8, 3];
 const TERM_NAMES = ["小寒", "立春", "啓蟄", "清明", "立夏", "芒種", "小暑", "立秋", "白露", "寒露", "立冬", "大雪"];
@@ -72,7 +77,7 @@ function jdn(year, month, day) {
   return day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
 }
 
-function tenGod(dayStemIndex, targetStemIndex) {
+export function tenGod(dayStemIndex, targetStemIndex) {
   if (dayStemIndex === targetStemIndex) return "比肩";
   const day = STEMS[dayStemIndex];
   const target = STEMS[targetStemIndex];
@@ -85,13 +90,17 @@ function tenGod(dayStemIndex, targetStemIndex) {
   return samePolarity ? "偏印" : "印綬";
 }
 
-function twelveStage(dayStemIndex, branchIndex) {
+export function twelveStage(dayStemIndex, branchIndex) {
   const direction = STEMS[dayStemIndex].polarity === "陽" ? 1 : -1;
   return STAGE_NAMES[mod(direction * (branchIndex - STAGE_START[dayStemIndex]), 12)];
 }
 
 function enrich(key, basic, dayStemIndex) {
   const hiddenStemIndex = STEMS.findIndex((item) => item.char === MAIN_HIDDEN[basic.branch.char]);
+  const hiddenStems = HIDDEN_STEMS[basic.branch.char].map((char) => {
+    const stem = STEMS.find((item) => item.char === char);
+    return { ...stem, tenGod: tenGod(dayStemIndex, stem.index) };
+  });
   return {
     key,
     ...basic,
@@ -99,6 +108,7 @@ function enrich(key, basic, dayStemIndex) {
     tenGod: key === "day" ? "—" : tenGod(dayStemIndex, basic.stem.index),
     hiddenStem: STEMS[hiddenStemIndex],
     hiddenTenGod: tenGod(dayStemIndex, hiddenStemIndex),
+    hiddenStems,
     twelveStage: twelveStage(dayStemIndex, basic.branch.index),
   };
 }

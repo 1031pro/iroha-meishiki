@@ -1,7 +1,7 @@
 {
   "name": "かんたん命式シート",
   "short_name": "命式シート",
-  "description": "四柱推命の命式・大運・年運を表示するツール",
+  "description": "四柱推命の命式・大運・年運・鑑定結果をオフラインでも表示するツール",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -113,9 +113,16 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 }
 .screen-header strong { grid-column: 2; font-family: "Noto Serif JP", "Yu Mincho", serif; font-size: clamp(1.05rem, 1.4vw, 1.4rem); letter-spacing: 0.08em; text-align: center; }
 .screen-header button { grid-column: 3; justify-self: end; min-height: 40px; padding: 8px 14px; color: var(--ink); background: #fdf8f1; border: 1px solid var(--line); border-radius: 4px; }
-.screen-tabs { position: fixed; top: 68px; right: 0; left: 0; z-index: 9; display: grid; grid-template-columns: repeat(4, 1fr); height: 48px; background: #fff; border-bottom: 1px solid var(--line); }
+.screen-tabs { position: fixed; top: 68px; right: 0; left: 0; z-index: 9; display: grid; grid-template-columns: repeat(2, 1fr); height: 48px; background: #fff; border-bottom: 1px solid var(--line); }
 .screen-tabs button { color: var(--ink); font-weight: 800; background: #fff; border: 0; border-right: 1px solid var(--line); }
-.screen-tabs button:first-child { color: #fff; background: var(--pink); }
+.screen-tabs button span { display: inline-grid; width: 24px; height: 24px; margin-right: 6px; color: var(--pink); background: #fff0f4; border: 1px solid #ef9cba; border-radius: 50%; place-items: center; }
+.screen-tabs button[aria-current="page"] { color: #fff; background: linear-gradient(135deg, #f05a8e, var(--pink)); }
+.screen-tabs button[aria-current="page"] span { color: var(--pink-deep); background: #fff; border-color: #fff; }
+.result-page { position: relative; min-height: 100vh; }
+.page-turn { position: fixed; bottom: 20px; z-index: 12; min-height: 48px; padding: 10px 18px; color: #fff; font-weight: 900; letter-spacing: 0.04em; background: linear-gradient(135deg, #f05a8e, var(--pink-deep)); border: 1px solid rgba(124, 15, 61, 0.26); border-radius: 6px; box-shadow: 0 8px 24px rgba(164, 25, 85, 0.24); }
+.page-turn span { font-size: 1.4em; line-height: 0; }
+.page-turn-next { right: 22px; }
+.page-turn-back { left: 22px; color: var(--purple); background: rgba(255, 250, 246, 0.96); border-color: var(--line); box-shadow: 0 8px 24px rgba(82, 27, 30, 0.12); }
 
 /* 最初の一画面に収める命式シート */
 .sheet-viewport { position: relative; width: 100%; height: calc(100vh - 116px); min-height: 320px; margin-top: 116px; overflow: hidden; background: #fdf8f1; }
@@ -167,8 +174,40 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 .branch-reference > div { grid-template-columns: repeat(6, 1fr) !important; }
 .sheet-reference-grid span { font-size: 0.95rem; font-weight: 900; white-space: nowrap; }
 
-/* 2ページ目以降 */
-.detail-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; padding: 56px 24px 100px; }
+/* 2ページ目：参考シートに合わせた四柱推命リーディング */
+.reading-viewport { min-height: calc(100vh - 116px); margin-top: 116px; padding: 28px 24px 88px; background: #fdf8f1; }
+.reading-sheet {
+  position: relative;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 0 18px 26px;
+  overflow: hidden;
+  color: #4d1c62;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(255, 222, 226, 0.24), transparent 22%),
+    linear-gradient(180deg, #fffdf9, #fffaf5);
+  border: 1px solid #edc5b9;
+  border-radius: 5px;
+  box-shadow: 0 12px 34px rgba(104, 40, 62, 0.08);
+}
+.reading-heading { position: relative; display: flex; align-items: center; width: min(520px, calc(100% - 90px)); height: 58px; margin: 0 0 4px -18px; padding: 0 52px 0 26px; color: #fff; background: linear-gradient(100deg, #dd2868, #e65f89 70%, #f4adbc); clip-path: polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 3% 50%); }
+.reading-heading::after { position: absolute; top: 50%; left: 94%; width: 120vw; height: 1px; background: #e47786; content: ""; }
+.reading-heading span { display: inline-grid; flex: 0 0 auto; width: 29px; height: 29px; margin-right: 16px; color: #df2c6a; font-family: "Noto Sans JP", sans-serif; font-weight: 900; background: #fff; border-radius: 50%; place-items: center; }
+.reading-heading h1 { margin: 0; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(1.45rem, 2.2vw, 2rem); letter-spacing: 0.08em; white-space: nowrap; }
+.reading-field { position: relative; padding: 20px 12px 18px; border-bottom: 1px solid rgba(224, 119, 130, 0.52); }
+.reading-field:last-of-type { border-bottom: 0; }
+.reading-field h2 { margin: 0 0 10px; color: #51205f; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(1.12rem, 1.55vw, 1.38rem); letter-spacing: 0.04em; }
+.reading-field h2 small { margin-left: 6px; font-family: "Noto Sans JP", "Yu Gothic", sans-serif; font-size: 0.68em; font-weight: 700; }
+.reading-copy { position: relative; z-index: 1; }
+.reading-copy p { margin: 0; padding: 7px 0 9px; color: #532361; font-size: clamp(0.98rem, 1.25vw, 1.1rem); font-weight: 600; line-height: 1.82; letter-spacing: 0.035em; border-bottom: 2px dotted rgba(104, 48, 119, 0.48); }
+.reading-copy p:last-child { border-bottom-color: rgba(104, 48, 119, 0.34); }
+.reading-field-future { padding-bottom: 24px; }
+.reading-flower { position: absolute; z-index: 0; width: 90px; height: 82px; object-fit: contain; opacity: 0.74; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); }
+.reading-flower-top { top: 43px; right: 6px; }
+.reading-flower-bottom { right: 2px; bottom: 0; transform: rotate(180deg); }
+.calculation-details { width: min(1120px, calc(100% - 48px)); margin: 0 auto 100px; color: var(--ink); background: #fffaf5; border: 1px solid var(--line); }
+.calculation-details summary { padding: 18px 22px; color: var(--purple); font-weight: 900; background: #fff0f4; cursor: pointer; }
+.detail-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; padding: 24px; }
 .detail-card { min-width: 0; scroll-margin-top: 132px; padding: 28px; background: #fffaf5; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(82, 27, 30, 0.06); }
 .section-heading { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 .section-heading p { margin: 0 0 4px; color: var(--pink); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.16em; }
@@ -189,11 +228,6 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 .luck-card th, .luck-card td { padding: 12px 10px; border: 1px solid var(--line); text-align: center; }
 .luck-card th { color: #fff; background: var(--pink); }
 .annual-luck-block th { background: #449f6a; }
-.interpretation-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.interpretation-list article { padding: 18px; background: #fff; border-left: 4px solid var(--pink); }
-.interpretation-list h3 { margin: 0 0 8px; font-family: "Noto Serif JP", "Yu Mincho", serif; }
-.interpretation-list p { margin: 0; line-height: 1.85; }
-
 @media (max-width: 900px) {
   .input-screen { display: block; width: 100%; min-height: 100vh; margin: 0; padding: 28px 16px; border: 0; border-radius: 0; box-shadow: none; }
   .input-screen::after { display: none; }
@@ -205,10 +239,16 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
   .screen-header button { min-height: 36px; padding: 6px 9px; font-size: 0.78rem; }
   .screen-tabs { top: 60px; height: 44px; }
   .sheet-viewport { height: calc(100vh - 104px); margin-top: 104px; }
-  .detail-results { padding: 40px 12px 84px; }
+  .reading-viewport { min-height: calc(100vh - 104px); margin-top: 104px; padding: 12px 10px 82px; }
+  .reading-sheet { padding-inline: 12px; }
+  .reading-heading { height: 50px; margin-left: -12px; padding-left: 18px; }
+  .reading-heading span { width: 25px; height: 25px; margin-right: 10px; }
+  .reading-field { padding: 16px 8px; }
+  .reading-copy p { font-size: 0.98rem; line-height: 1.78; }
+  .calculation-details { width: calc(100% - 20px); }
+  .detail-results { padding: 16px 10px 84px; }
   .detail-card { padding: 18px 12px; }
   .pillar-cards { grid-template-columns: repeat(2, 1fr); }
-  .interpretation-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
@@ -221,11 +261,22 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
   .sex-switch span { padding: 8px; }
   .screen-header strong { max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .screen-tabs button { font-size: 0.78rem; }
+  .screen-tabs button span { width: 20px; height: 20px; margin-right: 3px; }
+  .page-turn { bottom: 12px; min-height: 43px; padding: 8px 12px; font-size: 0.82rem; }
+  .page-turn-next { right: 12px; }
+  .page-turn-back { left: 12px; }
+  .reading-heading { width: calc(100% - 52px); }
+  .reading-heading h1 { font-size: 1.08rem; letter-spacing: 0.04em; }
+  .reading-flower { width: 68px; height: 62px; }
+  .reading-field h2 { padding-right: 26px; font-size: 1.05rem; }
+  .reading-copy p { font-size: 0.92rem; font-weight: 600; }
   .pillar-cards { grid-template-columns: 1fr; }
 }
 
 @media print {
-  .screen-header, .screen-tabs { display: none; }
+  .screen-header, .screen-tabs, .page-turn, .calculation-details { display: none; }
   .sheet-viewport { height: auto; margin: 0; overflow: visible; }
   .meishiki-sheet { position: static; transform: none; }
+  .reading-viewport { margin: 0; padding: 0; }
+  .reading-sheet { width: 100%; box-shadow: none; }
 }

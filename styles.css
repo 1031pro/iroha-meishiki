@@ -195,13 +195,13 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 .reading-heading::after { position: absolute; top: 50%; left: 94%; width: 120vw; height: 1px; background: #e47786; content: ""; }
 .reading-heading span { display: inline-grid; flex: 0 0 auto; width: 29px; height: 29px; margin-right: 16px; color: #df2c6a; font-family: "Noto Sans JP", sans-serif; font-weight: 900; background: #fff; border-radius: 50%; place-items: center; }
 .reading-heading h1 { margin: 0; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(1.45rem, 2.2vw, 2rem); letter-spacing: 0.08em; white-space: nowrap; }
-.reading-field { position: relative; padding: 20px 12px 18px; border-bottom: 1px solid rgba(224, 119, 130, 0.52); }
+.reading-field { position: relative; padding: 22px 12px 20px; border-bottom: 1px solid rgba(224, 119, 130, 0.34); }
 .reading-field:last-of-type { border-bottom: 0; }
 .reading-field h2 { margin: 0 0 10px; color: #51205f; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(1.12rem, 1.55vw, 1.38rem); letter-spacing: 0.04em; }
 .reading-field h2 small { margin-left: 6px; font-family: "Noto Sans JP", "Yu Gothic", sans-serif; font-size: 0.68em; font-weight: 700; }
 .reading-copy { position: relative; z-index: 1; }
-.reading-copy p { margin: 0; padding: 7px 0 9px; color: #532361; font-size: clamp(0.98rem, 1.25vw, 1.1rem); font-weight: 600; line-height: 1.82; letter-spacing: 0.035em; border-bottom: 2px dotted rgba(104, 48, 119, 0.48); }
-.reading-copy p:last-child { border-bottom-color: rgba(104, 48, 119, 0.34); }
+.reading-copy p { margin: 0 0 10px; padding: 0; color: #532361; font-size: clamp(0.98rem, 1.25vw, 1.1rem); font-weight: 600; line-height: 1.82; letter-spacing: 0.035em; }
+.reading-copy p:last-child { margin-bottom: 0; }
 .reading-field-future { padding-bottom: 24px; }
 .reading-flower { position: absolute; z-index: 0; width: 90px; height: 82px; object-fit: contain; opacity: 0.74; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); }
 .reading-flower-top { top: 43px; right: 6px; }

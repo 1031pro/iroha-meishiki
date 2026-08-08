@@ -34,7 +34,7 @@ export function renderMeishikiSheet(chart) {
     <div class="sheet-viewport">
       <article class="meishiki-sheet" aria-label="かんたん命式シート">
         <header class="sheet-heading">
-          <div class="sheet-title"><img src="./assets/meishiki-sheet-ornament.png" alt="" /><div><h1>かんたん命式シート</h1><p>あなたの生年月日と生まれた時間から、命式を作りましょう♪</p></div></div>
+          <div class="sheet-title"><img src="./assets/meishiki-sheet-ornament.png" alt="" /><div><h1>かんたん命式シート</h1></div></div>
           <dl><div><dt>生年月日：</dt><dd>${chart.input.year}年${chart.input.month}月${chart.input.day}日</dd></div><div><dt>生まれた時間：</dt><dd>${escapeHtml(timeText)}</dd></div></dl>
         </header>
         <div class="sheet-table-wrap">

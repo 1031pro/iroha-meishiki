@@ -1,4 +1,4 @@
-const CACHE_NAME = "iroha-meishiki-v2";
+const CACHE_NAME = "iroha-meishiki-v3";
 const FILES = [
   "./",
   "./index.html",

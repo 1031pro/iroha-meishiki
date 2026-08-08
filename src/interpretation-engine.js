@@ -16,6 +16,8 @@ const BRANCH_COMBINES = ["子丑", "寅亥", "卯戌", "辰酉", "巳申", "午�
 const BRANCH_CLASHES = ["子午", "丑未", "寅申", "卯酉", "辰戌", "巳亥"];
 const THREE_HARMONIES = ["申子辰", "亥卯未", "寅午戌", "巳酉丑"];
 const PILLAR_NAMES = { year: "年柱", month: "月柱", day: "日柱", hour: "時柱" };
+const STRENGTH_LABELS = { strong: "強め", balanced: "中庸", gentle: "穏やか" };
+const PARTNER_LEVEL_LABELS = { strong: "強く表れる", present: "命式内に表れる", subtle: "表れ方は控えめ" };
 
 function samePair(pair, left, right) {
   return pair.includes(left) && pair.includes(right) && left !== right;
@@ -130,6 +132,25 @@ function describePhase(pillar) {
   return `${LIFE_PHASE_LEAD[pillar.key]}${PILLAR_NAMES[pillar.key]}は${pillar.label}で、内側に表れる通変星は${pillar.hiddenTenGod}です。${TEN_GOD_TEXT[pillar.hiddenTenGod].personality}`;
 }
 
+function describeRelation(event) {
+  const pillarNames = event.pillars.map((key) => PILLAR_NAMES[key] || "運").join(event.type === "harmony" ? "・" : "―");
+  if (event.type === "harmony") return `${pillarNames}：地支の三合`;
+  if (event.type === "clash") return `${pillarNames}：地支の冲`;
+  return `${pillarNames}：${event.layer === "stem" ? "天干の合" : "地支の六合"}`;
+}
+
+function relationMemo(events, targetKey) {
+  const selected = targetKey ? events.filter((event) => event.pillars.includes(targetKey)) : events;
+  if (!selected.length) return targetKey
+    ? `${PILLAR_NAMES[targetKey]}に関わる大きな合・冲なし`
+    : "命式内に大きな合・冲なし";
+  return selected.map(describeRelation).join("／");
+}
+
+function hiddenGodMemo(pillars) {
+  return pillars.filter(Boolean).map((pillar) => `${PILLAR_NAMES[pillar.key]}：${pillar.hiddenTenGod}`).join("／");
+}
+
 export function analyzeChart(chart, majorLuck, annualLuck) {
   const counts = countTenGods(chart);
   const balance = elementBalance(chart);
@@ -168,6 +189,7 @@ export function createOfflineReading(chart, majorLuck, annualLuck) {
   const nextLuck = LUCK_TEXT[analysis.nextMajor.pillar.tenGod];
   const annualTheme = LUCK_TEXT[analysis.currentAnnual.pillar.tenGod];
   const lateLuck = LUCK_TEXT[analysis.lateMajor.pillar.tenGod];
+  const partnerStars = chart.input.sex === "male" ? "正財・偏財" : "正官・偏官";
 
   const personality = unique([
     DAY_STEM_TEXT[day.stem.char],
@@ -209,11 +231,63 @@ export function createOfflineReading(chart, majorLuck, annualLuck) {
   return {
     analysis,
     sections: [
-      { id: "personality", title: "あなたの本質・性格", paragraphs: personality },
-      { id: "love", title: "恋愛運・結婚運", paragraphs: love },
-      { id: "work-money", title: "仕事運・金運", paragraphs: workMoney },
-      { id: "relationships", title: "人間関係運", paragraphs: people },
-      { id: "future", title: "今後の運気の流れ", note: "大まかな流れ・転機・晩年", paragraphs: future },
+      {
+        id: "personality",
+        title: "あなたの本質・性格",
+        paragraphs: personality,
+        memo: [
+          `日干：${day.stem.char}（${day.stem.reading}／${day.stem.polarity}の${day.stem.element}）`,
+          `月柱・月令：${month.label}／${month.branch.char}（${month.branch.reading}・${month.branch.element}）、${chart.monthBoundary.name}から判定`,
+          `日柱の十二運：${day.twelveStage}`,
+          `日主の状態：${STRENGTH_LABELS[analysis.balance.strength]}`,
+          `中心となる通変星：${analysis.dominantGods.join("・")}`,
+        ],
+      },
+      {
+        id: "love",
+        title: "恋愛運・結婚運",
+        paragraphs: love,
+        memo: [
+          `日支（配偶者宮）：${day.branch.char}（${day.branch.reading}）`,
+          `日支の蔵干・通変星：${day.hiddenStem.char}（${day.hiddenStem.reading}）／${day.hiddenTenGod}`,
+          `配偶者星：${partnerStars}（${PARTNER_LEVEL_LABELS[analysis.partnerLevel]}）`,
+          `関係性の動き：${relationMemo(analysis.relationships, "day")}`,
+        ],
+      },
+      {
+        id: "work-money",
+        title: "仕事運・金運",
+        paragraphs: workMoney,
+        memo: [
+          `社会運を見る月柱：${month.label}`,
+          `月柱の通変星：天干 ${month.tenGod}／蔵干 ${month.hiddenTenGod}`,
+          `命式で強く表れる通変星：${analysis.dominantGods.join("・")}`,
+          `日主の状態：${STRENGTH_LABELS[analysis.balance.strength]}`,
+        ],
+      },
+      {
+        id: "relationships",
+        title: "人間関係運",
+        paragraphs: people,
+        memo: [
+          `各柱の蔵干通変星：${hiddenGodMemo([year, month, day, hour])}`,
+          `命式内の関係：${relationMemo(analysis.relationships)}`,
+          hour ? `時柱：${hour.label}（目下・後進との関係も反映）` : "時柱：出生時刻不明のため判定に含めず",
+        ],
+      },
+      {
+        id: "future",
+        title: "今後の運気の流れ",
+        note: "大まかな流れ・転機・晩年",
+        paragraphs: future,
+        memo: [
+          `現在の大運：${analysis.currentMajor.ageStart}〜${analysis.currentMajor.ageEnd}歳 ${analysis.currentMajor.pillar.label}／${analysis.currentMajor.pillar.tenGod}／${analysis.currentMajor.pillar.twelveStage}`,
+          `次の大運：${analysis.nextMajor.ageStart}〜${analysis.nextMajor.ageEnd}歳 ${analysis.nextMajor.pillar.label}／${analysis.nextMajor.pillar.tenGod}／${analysis.nextMajor.pillar.twelveStage}`,
+          `現在の年運：${analysis.currentAnnual.year}年 ${analysis.currentAnnual.pillar.label}／${analysis.currentAnnual.pillar.tenGod}／${analysis.currentAnnual.pillar.twelveStage}`,
+          hour ? `晩年を見る時柱：${hour.label}／${hour.hiddenTenGod}／${hour.twelveStage}` : "晩年を見る時柱：出生時刻不明のため限定的に判定",
+          `65歳前後の大運：${analysis.lateMajor.ageStart}〜${analysis.lateMajor.ageEnd}歳 ${analysis.lateMajor.pillar.label}／${analysis.lateMajor.pillar.tenGod}`,
+        ],
+      },
     ],
   };
 }

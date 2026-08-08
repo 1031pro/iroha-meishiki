@@ -176,10 +176,11 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 
 /* 2ページ目：参考シートに合わせた四柱推命リーディング */
 .reading-viewport { min-height: calc(100vh - 116px); margin-top: 116px; padding: 28px 24px 88px; background: #fdf8f1; }
+.reading-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 360px); gap: 22px; align-items: start; width: min(1500px, 100%); margin: 0 auto; }
 .reading-sheet {
   position: relative;
-  width: min(1120px, 100%);
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: 0 18px 26px;
   overflow: hidden;
   color: #4d1c62;
@@ -205,6 +206,27 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
 .reading-flower { position: absolute; z-index: 0; width: 90px; height: 82px; object-fit: contain; opacity: 0.74; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); mask-image: radial-gradient(ellipse at center, #000 48%, transparent 84%); }
 .reading-flower-top { top: 43px; right: 6px; }
 .reading-flower-bottom { right: 2px; bottom: 0; transform: rotate(180deg); }
+.reading-memo {
+  position: sticky;
+  top: 132px;
+  max-height: calc(100vh - 152px);
+  overflow: auto;
+  color: #4d1c62;
+  background: linear-gradient(180deg, #fffdf9, #fff8f3);
+  border: 1px solid #edc5b9;
+  border-radius: 5px;
+  box-shadow: 0 12px 34px rgba(104, 40, 62, 0.08);
+}
+.reading-memo-heading { padding: 16px 20px 14px; color: #fff; background: linear-gradient(100deg, #d82767, #e75f8a); }
+.reading-memo-heading p { margin: 0 0 3px; font-size: 0.8rem; font-weight: 900; letter-spacing: 0.18em; }
+.reading-memo-heading h1 { margin: 0; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: 1.22rem; letter-spacing: 0.05em; }
+.reading-memo-intro { margin: 0; padding: 14px 18px; color: #6e466e; font-size: 0.88rem; font-weight: 600; line-height: 1.75; background: #fff0f4; border-bottom: 1px solid #edc5b9; }
+.reading-memo-group { padding: 16px 18px 14px; border-bottom: 1px solid rgba(224, 119, 130, 0.42); }
+.reading-memo-group:last-child { border-bottom: 0; }
+.reading-memo-group h2 { margin: 0 0 9px; color: #c81e61; font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: 1rem; line-height: 1.55; }
+.reading-memo-group ul { margin: 0; padding-left: 1.25em; }
+.reading-memo-group li { margin: 0 0 6px; color: #55315e; font-size: 0.91rem; font-weight: 600; line-height: 1.7; }
+.reading-memo-group li:last-child { margin-bottom: 0; }
 .calculation-details { width: min(1120px, calc(100% - 48px)); margin: 0 auto 100px; color: var(--ink); background: #fffaf5; border: 1px solid var(--line); }
 .calculation-details summary { padding: 18px 22px; color: var(--purple); font-weight: 900; background: #fff0f4; cursor: pointer; }
 .detail-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; padding: 24px; }
@@ -240,7 +262,9 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
   .screen-tabs { top: 60px; height: 44px; }
   .sheet-viewport { height: calc(100vh - 104px); margin-top: 104px; }
   .reading-viewport { min-height: calc(100vh - 104px); margin-top: 104px; padding: 12px 10px 82px; }
+  .reading-layout { grid-template-columns: 1fr; gap: 14px; }
   .reading-sheet { padding-inline: 12px; }
+  .reading-memo { position: static; max-height: none; }
   .reading-heading { height: 50px; margin-left: -12px; padding-left: 18px; }
   .reading-heading span { width: 25px; height: 25px; margin-right: 10px; }
   .reading-field { padding: 16px 8px; }
@@ -278,5 +302,7 @@ select:focus, input:focus, button:focus-visible { outline: 3px solid rgba(237, 5
   .sheet-viewport { height: auto; margin: 0; overflow: visible; }
   .meishiki-sheet { position: static; transform: none; }
   .reading-viewport { margin: 0; padding: 0; }
-  .reading-sheet { width: 100%; box-shadow: none; }
+  .reading-layout { display: block; width: 100%; }
+  .reading-sheet, .reading-memo { width: 100%; max-height: none; box-shadow: none; }
+  .reading-memo { margin-top: 16px; }
 }

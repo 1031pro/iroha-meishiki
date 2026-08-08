@@ -70,14 +70,26 @@ function renderReadingPage(reading) {
       <h2>${escapeHtml(section.title)}${section.note ? `<small>（${escapeHtml(section.note)}）</small>` : ""}</h2>
       <div class="reading-copy">${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>
     </section>`).join("");
+  const memoSections = reading.sections.map((section) => `
+    <section class="reading-memo-group reading-memo-${escapeHtml(section.id)}">
+      <h2>${escapeHtml(section.title)}</h2>
+      <ul>${section.memo.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+    </section>`).join("");
   return `
     <div class="reading-viewport">
-      <article class="reading-sheet" aria-label="四柱推命リーディング">
-        <header class="reading-heading"><span>2</span><h1>四柱推命リーディング</h1></header>
-        <img class="reading-flower reading-flower-top" src="./assets/meishiki-sheet-ornament.png" alt="" />
-        ${sections}
-        <img class="reading-flower reading-flower-bottom" src="./assets/meishiki-sheet-ornament.png" alt="" />
-      </article>
+      <div class="reading-layout">
+        <article class="reading-sheet" aria-label="四柱推命リーディング">
+          <header class="reading-heading"><span>2</span><h1>四柱推命リーディング</h1></header>
+          <img class="reading-flower reading-flower-top" src="./assets/meishiki-sheet-ornament.png" alt="" />
+          ${sections}
+          <img class="reading-flower reading-flower-bottom" src="./assets/meishiki-sheet-ornament.png" alt="" />
+        </article>
+        <aside class="reading-memo" aria-label="鑑定の判断メモ">
+          <header class="reading-memo-heading"><p>鑑定メモ</p><h1>判断に使った命式の要素</h1></header>
+          <p class="reading-memo-intro">左の鑑定文を、命式のどの要素から読んだかを項目ごとに示しています。</p>
+          ${memoSections}
+        </aside>
+      </div>
     </div>`;
 }
 
